@@ -1,8 +1,7 @@
 <?php
     $command = $_GET['command'];
     $params = $_GET['params'];
- 
-    $hostname = '192.168.1.15';
+    $host = $_GET['host'];
     $port = 60128;
  
     switch ($command)
@@ -38,17 +37,12 @@
         default:
             return null;
     }
+    print  "   Message : ";
     print $message;
  
- 
- $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
- socket_bind($sock, $hostname);
- socket_connect($sock, '127.0.0.1', 80);
- $packet = "ISCP\x00\x00\x00\x10\x00\x00\x00" . chr(strlen($message) + 1) . "\x01\x00\x00\x00" . $message . "\x0D";
- socket_write($sock, $packet);    
- socket_close($sock);
- 
-     print "  ...envoyé : ";
-     print  socket_last_error();
-     print " octets";
+                $package = "ISCP\x00\x00\x00\x10\x00\x00\x00" . chr(strlen($message) + 1) . "\x01\x00\x00\x00" . $message . "\x0D";
+                $socket = socket_create( AF_INET, SOCK_STREAM, SOL_TCP );
+                socket_connect($socket, $host, $port);
+                socket_write($socket, $package);
+                socket_close($socket);
 ?>
